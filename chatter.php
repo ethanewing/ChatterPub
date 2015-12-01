@@ -4,6 +4,7 @@
 <head>
 	<title>Chatter</title>
 	<link href="chatter.css" rel="stylesheet" type="text/css">
+	
 	<script src="http://www.cs.unc.edu/Courses/comp426-f15/jquery-1.11.3.js"
           type="text/javascript"></script>
     <script src="chatter.js" type="text/javascript"></script>

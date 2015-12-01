@@ -39,7 +39,8 @@ var Post = function(message_board, message, message_length) {
 	});
 	this.message_div.addClass("live");
 	
-	message_board.append(this.message_div);
+	message_board.prepend(this.message_div);
+	$(".live").show( selectedEffect, options, 500);
 	message_board.clear(); 
 }
 

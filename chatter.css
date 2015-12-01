@@ -3,7 +3,7 @@ h1 {
 }
 
 body {
-	background-color: rgb(230,230,255);
+	background-color: rgb(255,255,255);
 }
 
 .top_area {
@@ -11,7 +11,7 @@ body {
 	margin: auto;
 	border: thin solid rgb(0,0,0);
 	height: 240px;
-	background-color: rgb(240,240, 255);
+	background-color: rgb(255, 255, 255);
 	border-radius: 3px;
 }
 
