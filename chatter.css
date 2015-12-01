@@ -19,7 +19,7 @@ body {
 	border: thin solid rgb(0,0,0);
 	margin: auto;
 	width: 300px;
-	height: 200px;
+	height: 210px;
 	margin-top: 20px;
 	border-radius: 8px;
 }
@@ -45,8 +45,8 @@ body {
 .submit_form #post_bottom #post_button {
 	float: right;
 	position: relative;
-	bottom: 10px;
-	right: 2px;
+	bottom: 3px;
+	right: 5px;
 }
 
 #message_board {
@@ -57,4 +57,5 @@ div.live {
 	text-align: left;
 	border: thin solid rgb(0,0,0);
 	border-radius: 2px;
+	padding-left: 10px;
 }
