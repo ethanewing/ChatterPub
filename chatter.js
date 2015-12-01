@@ -40,8 +40,8 @@ var Post = function(message_board, message, message_length) {
 	this.message_div.addClass("live");
 	
 	message_board.prepend(this.message_div);
-	$(".live").show( selectedEffect, options, 500);
-	message_board.clear(); 
+	//$(".live").show( selectedEffect, options, 500);
+	document.getElementById('post_body_form').value = "";
 }
 
 Post.HEIGHT = 50;
