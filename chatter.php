@@ -19,7 +19,7 @@
 					Post Message
 				</div>
 				<div id="post_body">
-					<textarea id="post_body_form" name="post_body_form" maxlength="250"></textarea>
+					<textarea id="post_body_form" name="post_body_form" maxlength="250" autofocus></textarea>
 				</div>
 				<div id="post_bottom">
 					<input type="button" id="post_button" value="Submit"> 
