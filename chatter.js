@@ -23,32 +23,50 @@ $(document).ready(function() {
 });
 
 var Post = function(message_board, message, message_length) {
-	this.message_board = message_board;
-//	this.message = message;
-	this.message = message.replace(/\r?\n/g, '<br />');
-	this.message_length = message_length;
-	this.width = message_board.offsetWidth;
 	
-	this.message_div = $("<div><p>" + this.message + "</p></div>").css({
-		position: "relative",
-		width: this.width,
-		height: "50px",
-//		top: this.vert_pos,
-		"font-size": Post.FONT_SIZE,
-		"margin-top": "5px"
-	});
-	this.message_div.addClass("live");
-	
-	message_board.prepend(this.message_div);
-	//$(".live").show( selectedEffect, options, 500);
-	document.getElementById('post_body_form').value = "";
+	if(document.getElementById('post_body_form').value == ""){
+		alert('You cannot post a blank message'); 
+	} else {
+		this.message_board = message_board;
+	//	this.message = message;
+		this.message = message.replace(/\r?\n/g, '<br />');
+		this.message_length = message_length;
+		this.width = message_board.offsetWidth;
+		
+		this.message_div = $("<div><p>" + this.message + "</p></div>").css({
+			position: "relative",
+			width: this.width,
+			height: "50px",
+	//		top: this.vert_pos,
+			"font-size": Post.FONT_SIZE,
+			"margin-top": "5px"
+		});
+		this.message_div.addClass("live");
+		
+		message_board.prepend(this.message_div);
+		//$(".live").show( selectedEffect, options, 500);
+		document.getElementById('post_body_form').value = "";
+		document.forms['submit_form'].elements['post_body_form'].focus();
+	}
 }
+
+
+
+$("input").keypress(function(event) {
+    if (event.which == 13) {
+        event.preventDefault();
+        $('#post_body_form').submit();
+    }
+});
+
+
+
 
 Post.HEIGHT = 50;
 Post.FONT_SIZE = 14;
 
 
- function getDateTime() {
+function getDateTime() {
     var now     = new Date(); 
     var year    = now.getFullYear();
     var month   = now.getMonth()+1; 
