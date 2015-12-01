@@ -9,20 +9,20 @@
 	class Post {
 		private $id;
 		private $message;
-		private $time;
+		private $timestamp;
 		private $userid;
 		private $threadid;
 		
-		public static function create($message, $time, $userid, $threadid) {
+		public static function create($message, $timestamp, $userid, $threadid) {
 			$conn = new mysqli("classroom.cs.unc.edu", "eewing", "CH@ngemenow99Please!eewing", "eewingdb");
 			if ($conn->connect_errno)
 				echo "Failed to connect to MySQL: (" . $conn->connect_errno . ") " . $conn->connect_error;
 			else {
-				$result = $conn->query("insert into Post values (0, '" . $mesage . "', '" . $time . "', "
+				$result = $conn->query("insert into Post values (0, '" . $mesage . "', '" . $timestamp . "', "
 										. $userid . ", " . $threadid . ")");
 				if($result) {
 					$newid = $conn->insert_id;
-					return new Post($newid, $message, $time, $userid, $threadid);
+					return new Post($newid, $message, $timestamp, $userid, $threadid);
 				}
 				
 				return null;
@@ -40,10 +40,10 @@
 						return null;
 					$post_info = $result->fetch_assoc();
 					return new Post($post_info['id'], 
-									$post_info['message'],
-									$post_info['time'], 
-									$post_info['userid'],
-									$post_infor['threadid']);
+							$post_info['message'],
+							$post_info['timestamp'], 
+							$post_info['userid'],
+							$post_infor['threadid']);
 				}
 				
 				return null;
@@ -87,40 +87,41 @@
 			return $posts;
 		}
 		
-		private function __construct($id, $message, $time, $userid, $threadid) {
-			$this->$id = $id;
-			$this->$message = $message;
-			$this->$time = $time;
-			$this->$userid = $userid;
-			$this->$threadid = $threadid;
+		private function __construct($id, $message, $timestamp, $userid, $threadid) {
+			$this->id = $id;
+			$this->message = $message;
+			$this->timestamp = $timestamp;
+			$this->userid = $userid;
+			$this->threadid = $threadid;
 		}
 		
 		public function getID() {
-			return $this->$id;
+			return $this->id;
 		}
 		
 		public function getMessage() {
-			return $this->$message;
+			return $this->message;
 		}
 		
-		public function getTime() {
-			return $this->$time;
+		public function getTimestamp() {
+			return $this->timestamp;
 		}
 		
 		public function getUser() {
-			/*
-			$conn = new mysqli("classroom.cs.unc.edu", "eewing", "CH@ngemenow99Please!eewing", "eewingdb");
-			if($conn->connect_errno)
-				echo "Failed to connect to MySQL: (" . $conn->connect_errno . ") " . $conn->connect_error;
-			else {
-				$result = $conn->query("select * from User where id = " . )
-			}
-			*/
-			return User::findByID($this->$userid);
+			return User::findByID($this->userid);
 		}
 		
 		public function getThread() {
-			return Thread::findByID($this->$threadid);
+			return Thread::findByID($this->threadid);
+		}
+		
+		public function getJSON() {
+			$json_obj = array('id' => $this->id,
+					'message' => $this->message,
+		      			'timestamp' => $this->timestamp,
+		      			'userid' => $this->userid,
+		      			'threadid' => $this->threadid);
+    			return json_encode($json_obj);
 		}
 	}
 	
@@ -160,11 +161,16 @@
 		}
 		
 		private function __construct($id) {
-			$this->$id = $id;
+			$this->id = $id;
 		}
 		
 		public function getID() {
-			return $this->$id;
+			return $this->id;
+		}
+		
+		public function getJSON() {
+			$json_obj = array('id' => $this->id);
+    			return json_encode($json_obj);
 		}
 	}
 	
@@ -206,16 +212,22 @@
 		}
 		
 		private function __construct($id, $forumid) {
-			$this->$id = $id;
-			$this->$forumid = $forumid;
+			$this->id = $id;
+			$this->forumid = $forumid;
 		}
 		
 		public function getID() {
-			return $this->$id;
+			return $this->id;
 		}
 		
 		public function getForum() {
-			return Forum::findByID($this->$forumid);
+			return Forum::findByID($this->forumid);
+		}
+		
+		public function getJSON() {
+			$json_obj = array('id' => $this->id,
+					'forumid' => $this->forumid);
+    			return json_encode($json_obj);
 		}
 	}
 	
@@ -257,16 +269,22 @@
 		}
 		
 		private function __construct($id, $name) {
-			$this->$id = $id;
-			$this->$name = $name;
+			$this->id = $id;
+			$this->name = $name;
 		}
 		
 		public function getID() {
-			return $this->$id;
+			return $this->id;
 		}
 		
 		public function getName() {
-			return $this->$id;
+			return $this->id;
+		}
+		
+		public function getJSON() {
+			$json_obj = array('id' => $this->id,
+					'name' => $this->name);
+    			return json_encode($json_obj);
 		}
 	}
 
