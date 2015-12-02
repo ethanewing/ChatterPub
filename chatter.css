@@ -55,6 +55,7 @@ body {
 
 div.live {
 	text-align: left;
+	word-wrap: break-word;
 	border: thin solid rgb(0,0,0);
 	border-radius: 2px;
 	padding-left: 10px;
