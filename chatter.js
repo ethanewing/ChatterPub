@@ -36,7 +36,7 @@ var Post = function(message_board, message, message_length) {
 		this.message_div = $("<div><p>" + this.message + "</p></div>").css({
 			position: "relative",
 			width: this.width,
-			height: "50px",
+			"min-height": "50px",
 	//		top: this.vert_pos,
 			"font-size": Post.FONT_SIZE,
 			"margin-top": "5px"
