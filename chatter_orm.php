@@ -52,7 +52,7 @@
 			}
 		}
 		
-		/* Used to get multiple Post objects */
+		// Used to get multiple Post objects 
 		public static function getRange($start, $end) {
 			if ($start < 0) {
 				if ($end > $start)
