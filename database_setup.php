@@ -8,7 +8,7 @@
 	
 	$conn->query("drop table if exists Post");
 
-	$conn->query("create table Post (id int auto_increment, message text, time date, primary key (id))");
+	$conn->query("create table Post (id int auto_increment, message text, timestamp date, primary key (id))");
 							
 	$message1 = "this is a message";
 	$message2 = "this is another message";
