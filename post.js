@@ -13,6 +13,7 @@ Post.prototype.makeDiv = function(width) {
 	  "margin-top": "5px"
 	});
 	
+	post_div.addClass("live");
 	post_div.data('post', this);
 	
 	return post_div;
