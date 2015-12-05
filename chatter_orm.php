@@ -222,21 +222,21 @@
 		}
 		
 		private function __construct($id, $message, $timestamp) {
-			$this->$id = $id;
-			$this->$message = $message;
-			$this->$timestamp = $timestamp;
+			$this->id = $id;
+			$this->message = $message;
+			$this->timestamp = $timestamp;
 		}
 		
 		public function getID() {
-			return $this->$id;
+			return $this->id;
 		}
 		
 		public function getMessage() {
-			return $this->$message;
+			return $this->message;
 		}
 		
 		public function getTime() {
-			return $this->$timestamp;
+			return $this->timestamp;
 		}
 		
 		public function getJSON() {
