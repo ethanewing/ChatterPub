@@ -1,7 +1,7 @@
 var Post = function(post_json) {
   this.id = post_json.id;
   this.message = post_json.id;
-  this.time = post_json.time;
+  this.timestamp = post_json.timestamp;
 }
 
 Post.prototype.makeDiv = function(width) {
