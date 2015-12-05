@@ -131,17 +131,17 @@
 	class Post {
 		private $id;
 		private $message;
-		private $time;
+		private $timestamp;
 
-		public static function create($message, $time) {
+		public static function create($message, $timestamp) {
 			$conn = new mysqli("classroom.cs.unc.edu", "eewing", "CH@ngemenow99Please!eewing", "eewingdb");
 			if ($conn->connect_errno)
 				echo "Failed to connect to MySQL: (" . $conn->connect_errno . ") " . $conn->connect_error;
 			else {
-				$result = $conn->query("insert into Post values (0, '" . $mesage . "', '" . $time . ")");
+				$result = $conn->query("insert into Post values (0, '" . $mesage . "', '" . $timestamp . ")");
 				if($result) {
 					$newid = $conn->insert_id;
-					return new Post($newid, $message, $time);
+					return new Post($newid, $message, $timestamp);
 				}
 				
 				return null;
@@ -160,10 +160,27 @@
 					$post_info = $result->fetch_assoc();
 					return new Post($post_info['id'], 
 									$post_info['message'],
-									$post_info['time']);
+									$post_info['timestamp']);
 				}
 				
 				return null;
+			}
+		}
+		
+		public static function getAllIDs() {
+			$conn = new mysqli("classroom.cs.unc.edu", "eewing", "CH@ngemenow99Please!eewing", "eewingdb");
+			if($conn->connect_errno)
+				echo "Failed to connect to MySQL: (" . $conn->connect_errno . ")" . $conn->connect_error;
+			else {
+				$result = $conn->query("select id from Post");
+				$id_array = array();
+				
+				if ($result) {
+					while ($next_row = $result->fetch_array()) {
+						$id_array[] = intval($next_row['id']);
+					}
+				}
+				return $id_array;
 			}
 		}
 		
@@ -204,10 +221,10 @@
 			return $posts;
 		}
 		
-		private function __construct($id, $message, $time) {
+		private function __construct($id, $message, $timestamp) {
 			$this->$id = $id;
 			$this->$message = $message;
-			$this->$time = $time;
+			$this->$timestamp = $timestamp;
 		}
 		
 		public function getID() {
@@ -219,7 +236,14 @@
 		}
 		
 		public function getTime() {
-			return $this->$time;
+			return $this->$timestamp;
+		}
+		
+		public function getJSON() {
+			$json_obj = array('id' => $this->id,
+					'message' => $this->message,
+					'timestamp' => $this->timestamp);
+			return json_encode($json_obj);
 		}
 
 	}
