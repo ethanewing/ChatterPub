@@ -132,13 +132,13 @@
 		private $id;
 		private $message;
 		private $timestamp;
-
+		
 		public static function create($message, $timestamp) {
 			$conn = new mysqli("classroom.cs.unc.edu", "eewing", "CH@ngemenow99Please!eewing", "eewingdb");
 			if ($conn->connect_errno)
 				echo "Failed to connect to MySQL: (" . $conn->connect_errno . ") " . $conn->connect_error;
 			else {
-				$result = $conn->query("insert into Post values (0, '" . $mesage . "', '" . $timestamp . ")");
+				$result = $conn->query("insert into Post values (0, '" . $message . "', '" . $timestamp . "')");
 				if($result) {
 					$newid = $conn->insert_id;
 					return new Post($newid, $message, $timestamp);
