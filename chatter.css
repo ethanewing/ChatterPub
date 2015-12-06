@@ -19,14 +19,13 @@ p {
 .top_area {
 	width: 80%;
 	margin: auto;
-	border: thin solid rgb(0,0,0);
+	border: 3px solid rgb(0,0,0);
 	height: 255px;
-	background-color: rgb(255, 255, 255);
 	border-radius: 3px;
 }
 
 .submit_form {
-	border: thin solid rgb(0,0,0);
+	border: 2px solid rgb(0,0,0);
 	margin: auto;
 	width: 300px;
 	height: 210px;
@@ -38,7 +37,8 @@ p {
 	font-size: 18px;
 	text-align: center;
 	width: 300px;
-	border-bottom: thin solid rgb(0,0,0);
+	color: #FFFFFF;
+	border-bottom: 2px solid rgb(0,0,0);
 }
 
 .submit_form #post_body {
@@ -63,10 +63,15 @@ p {
 	padding: 10px;
 }
 
+#main_heading {
+	color: #FFFFFF;
+}
+
 div.live {
 	text-align: left;
 	word-wrap: break-word;
-	border: thin solid rgb(0,0,0);
-	border-radius: 2px;
+	border: 3px solid 4px rgb(0,0,0);
+	border-radius: 6px;
 	padding-left: 10px;
 }
+
