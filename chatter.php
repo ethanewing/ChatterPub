@@ -5,16 +5,17 @@
 	$path_components = explode('/', $_SERVER['PATH_INFO']);
 	
 	if($_SERVER['REQUEST_METHOD'] == 'GET') {
-		// GET means eiher instance look up, index generation, or deletion
+		// GET means eiher instance look up, index generation, or deletion.
+		// However, for this app, we only care about instance look up.
 		
-		// Following matches instance URL in form /chatter.php/[id]
+		// The following matches instance URL in form /chatter.php/[id]
 		if ((count($path_components) >= 2) && ($path_components[1] != "")) {
 			// Interpret <id> as integer
 			$post_id = intval($path_components[1]);
 			
 			// Look up object via ORM
 			$post = Post::findByID($post_id);
-			
+
 			if ($post == null) {
 				// Post not found.
 				header("HTTP/1.0 404 Not Found");
@@ -25,6 +26,7 @@
 			// Normal lookup; generate JSON encoding as response
 			header("Content-type: application/json");
 			print($post->getJSON());
+			exit();
 		}
 		
 		header("Content-type: application/json");
@@ -32,16 +34,9 @@
 		exit();
 	}
 	else if($_SERVER['REQUEST_METHOD'] == 'POST') {
-		// This should only add new posts; we don't want to allow post editing for now.
+		// This should only add new posts; we don't want to allow post editing.
 		
 		// Creating a new Post item
-		
-		// Validate values
-		if(!isset($_REQUEST['id'])) {
-			header("HTTP/1.0 400 Bad Request");
-			print("Missing id");
-			exit();
-		}
 		
 		$message = trim($_REQUEST['message']);
 		if($message == '') {
@@ -56,14 +51,13 @@
 		}
 		
 		// Create new Post item via ORM
-		$new_post = Post::create($id, $message, $timestamp);
+		$new_post = Post::create($message, $timestamp);
 		
 		// Report if failed
 		if ($new_post == null) {
 			header("HTTP/1.0 500 Server Error");
 			print("Server couldn't create new post.");
 			exit();
-			
 		}
 		
 		//Generate JSON encoding of new Post
