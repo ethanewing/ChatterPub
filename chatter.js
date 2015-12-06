@@ -11,16 +11,62 @@
  */
 
 
-$(document).ready(function() {
+var url_base = "http://wwwp.cs.unc.edu/Courses/comp426-f15/users/eewing/Codiad/workspace/cs426/FinalProject";
+
+$(document).ready(function () {
 	
-	$("#post_button").click(function(event) {
-			event.preventDefault();
-			message_board_div = $("#message_board");
-			message = $("#post_body_form").val();
-			message_board = new Post(message_board_div, message, message.length);
+	$.ajax(url_base + "/chatter.php",
+			{type: "GET",
+			dataType: "json",
+			success: function(post_ids, status, jqXHR) {
+				for (var i = 0; i < post_ids.length; i++) {
+					load_post_item(post_ids[i]);
+				}
+			},
+			error: function(jqXHR, status, error) {
+				alert(jqXHR.responseText);
+			}
 	});
 	
+	$("#post_button").click(function(event) {
+		event.preventDefault();
+
+		var post_data = {};
+		post_data['id'] = 0;
+		post_data['message'] = $("#post_body_form").val();
+		post_data['timestamp'] = '2015-04-02';
+		
+		$.ajax(url_base + "/chatter.php",
+				{type: "POST",
+				dataType: "json",
+				data: post_data,
+				success: function(post_json, status, jqXHR) {
+					var p = new Post(post_json);
+					$("#message_board").prepend(p.makeDiv($("#message_board").offsetWidth));
+				},
+				error: function(jqXHR, status, error) {
+					alert(jqXHR.responseText);
+				}
+			}
+		);
+	});
+	
+	
 });
+
+var load_post_item = function(id) {
+	$.ajax(url_base + "/chatter.php/" + id,
+		{type: "GET",
+		dataType: "json",
+		success: function(post_json, status, jqXHR) {
+			var p = new Post(post_json);
+			$("#message_board").prepend(p.makeDiv($("#message_board").offsetWidth));
+		},
+		error: function(jqXHR, status, error) {
+				alert(jqXHR.responseText);
+		}
+	});
+}
 
 var Post = function(message_board, message, message_length) {
 	
