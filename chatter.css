@@ -4,7 +4,16 @@ h1 {
 
 body {
 	background-color: rgb(255,255,255);
-	background-image: url("http://i853.photobucket.com/albums/ab97/nygsbc78/Tar_Heel_Brick_Wallpaper.jpg");;
+	background-image: url("http://i853.photobucket.com/albums/ab97/nygsbc78/Tar_Heel_Brick_Wallpaper.jpg");
+}
+
+@font-face {
+    font-family: 'CustomFont'; 
+    src: url('https://s3-us-west-2.amazonaws.com/chatter/custom_font.OTF'); 
+}
+
+p {
+    font-family: 'CustomFont';
 }
 
 .top_area {
