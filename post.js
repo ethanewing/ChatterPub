@@ -9,7 +9,7 @@ var Post = function(post_json) {
 Post.prototype.makeDiv = function(width) {
 	var post_div = $("<div>" + this.message + "</div>").css({
 	  position: "relative",
-	  height: "100px",
+	  height: "210px",
 	  width: "23.4375%",
 	  "font-size": Post.FONT_SIZE,
 	  "margin-top": "5px",
@@ -20,6 +20,7 @@ Post.prototype.makeDiv = function(width) {
 	var date_div = $("<div>" + this.timestamp + "</div>").css({
 		position: "absolute",
 		bottom: "0px",
+		"font-size": Post.FONT_SIZE_OF_DATE,
 		right: "5px"
 	})
 	post_div.append(date_div);
@@ -32,7 +33,8 @@ Post.prototype.makeDiv = function(width) {
 	return post_div;
 };
 
-Post.FONT_SIZE = 14;
+Post.FONT_SIZE = 18;
+Post.FONT_SIZE_OF_DATE = 16;
 
 // not sure if we'll actually need this object yet.
 var Thread = function(thread_json) {
