@@ -10,7 +10,6 @@
  *
  */
 
-
 var url_base = "http://wwwp.cs.unc.edu/Courses/comp426-f15/users/eewing/Codiad/workspace/cs426/FinalProject";
 
 $(document).ready(function () {
@@ -20,7 +19,7 @@ $(document).ready(function () {
 			dataType: "json",
 			success: function(post_ids, status, jqXHR) {
 				for (var i = 0; i < post_ids.length; i++) {
-					load_post_item(post_ids[i]);
+					loadPostItem(post_ids[i]);
 				}
 			},
 			error: function(jqXHR, status, error) {
@@ -30,14 +29,67 @@ $(document).ready(function () {
 	
 	$("#post_button").click(function(event) {
 		event.preventDefault();
+		/*
+		* This is going to be altered; we eventually want this to only be used to make posts
+		* once we're already in a thread.  It's as it is now just to avoid any possible
+		* compilation errors or glitches.
+		*/
+		alert("submit does nothing now; should be used to add replies to threads");
+	});
+	
+	$("#thread_button").click(function(event) {
+		event.preventDefault();
+		createThread();
+	});
+	
+	var longpress = false, startTime, endTime;
+	
+	$("#message_board").on('click', '.original_post', function(event) {
+		event.preventDefault();
+		if (!longpress) 
+			alert("this is a thread; everything worked!");
+	});
+	
+	$("#message_board").on('mousedown', '.original_post', function(event) {
+		startTime = new Date().getTime();
+	});
+	
+	$("#message_board").on('mouseup', '.original_post', function(event) {
+		endTime = new Date().getTime();
+		longpress = (endTime - startTime < 250) ? false: true;
+	});
+	
+});
 
-		var post_data = {};
-		post_data['id'] = 0;
-		post_data['message'] = $("#post_body_form").val();
-		post_data['timestamp'] = '2015-04-02';
-		
-		$.ajax(url_base + "/chatter.php",
-				{type: "POST",
+var createThread = function() {
+	var thread_data = {};
+	thread_data['id'] = 0;
+	
+	$.ajax(url_base + "/chatter.php/" + "createThread",
+			{
+				type: "POST",
+				dataType: "json",
+				data: thread_data,
+				success: function(thread_json, status, jqXHR) {
+					createPost(thread_json.id, 1);
+				},
+				error: function(jqXHR, status, error) {
+					alert(jqXHR.responseText);
+				}
+			})
+}
+
+var createPost = function(thread_id, is_original_post) {
+	var post_data = {};
+	post_data['id'] = 0;
+	post_data['message'] = $("#post_body_form").val();
+	post_data['timestamp'] = getDateTime();
+	post_data['thread_id'] = thread_id;
+	post_data['is_original_post'] = is_original_post;
+
+	$.ajax(url_base + "/chatter.php",
+			{
+				type: "POST",
 				dataType: "json",
 				data: post_data,
 				success: function(post_json, status, jqXHR) {
@@ -46,15 +98,12 @@ $(document).ready(function () {
 				},
 				error: function(jqXHR, status, error) {
 					alert(jqXHR.responseText);
-				}
 			}
-		);
-	});
-	
-	
-});
+		}
+	);
+}
 
-var load_post_item = function(id) {
+var loadPostItem = function(id) {
 	$.ajax(url_base + "/chatter.php/" + id,
 		{type: "GET",
 		dataType: "json",
@@ -68,73 +117,37 @@ var load_post_item = function(id) {
 	});
 }
 
-var Post = function(message_board, message, message_length) {
-	
-	if(document.getElementById('post_body_form').value == ""){
-		alert('You cannot post a blank message'); 
-	} else {
-		this.message_board = message_board;
-	//	this.message = message;
-		this.message = message.replace(/\r?\n/g, '<br />');
-		this.message_length = message_length;
-		this.width = message_board.offsetWidth;
-		
-		this.message_div = $("<div><p>" + this.message + "</p></div>").css({
-			position: "relative",
-			width: this.width,
-			"min-height": "50px",
-	//		top: this.vert_pos,
-			"font-size": Post.FONT_SIZE,
-			"margin-top": "5px"
-		});
-		this.message_div.addClass("live");
-		
-		message_board.prepend(this.message_div);
-		//$(".live").show( selectedEffect, options, 500);
-		document.getElementById('post_body_form').value = "";
-		document.forms['submit_form'].elements['post_body_form'].focus();
-	}
-}
-
-
-
-$("input").keypress(function(event) {
-    if (event.which == 13) {
-        event.preventDefault();
-        $('#post_body_form').submit();
-    }
-});
-
-
-
-
-Post.HEIGHT = 50;
-Post.FONT_SIZE = 14;
-
-
-function getDateTime() {
+ function getDateTime() {
     var now     = new Date(); 
     var year    = now.getFullYear();
     var month   = now.getMonth()+1; 
     var day     = now.getDate();
     var hour    = now.getHours();
     var minute  = now.getMinutes();
-    var second  = now.getSeconds(); 
+    var second  = now.getSeconds();
+    
+    if (hour > 12) {
+    	hour -= 12;
+    } else if (hour === 0) {
+    	hour = 12;
+    }
+    
     if(month.toString().length == 1) {
-        var month = '0'+month;
+        month = '0' + month;
     }
     if(day.toString().length == 1) {
-        var day = '0'+day;
+        day = '0' + day;
     }   
     if(hour.toString().length == 1) {
-        var hour = '0'+hour;
+        hour = '0' + hour;
     }
     if(minute.toString().length == 1) {
-        var minute = '0'+minute;
+        minute = '0' + minute;
     }
     if(second.toString().length == 1) {
-        var second = '0'+second;
+        second = '0' + second;
     }   
-    var dateTime = year+'/'+month+'/'+day+' '+hour+':'+minute+':'+second;   
-     return dateTime;
+    var dateTime = hour + ':' + minute + ':' + second + ' ' + month + '/' + day + '/' + year;   
+    
+    return dateTime;
 }

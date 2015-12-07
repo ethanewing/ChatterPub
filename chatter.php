@@ -15,7 +15,7 @@
 			
 			// Look up object via ORM
 			$post = Post::findByID($post_id);
-
+			
 			if ($post == null) {
 				// Post not found.
 				header("HTTP/1.0 404 Not Found");
@@ -30,14 +30,25 @@
 		}
 		
 		header("Content-type: application/json");
-		print(json_encode(Post::getAllIDs()));
+		print(json_encode(Post::getAllOriginalPosts()));
 		exit();
 	}
 	else if($_SERVER['REQUEST_METHOD'] == 'POST') {
-		// This should only add new posts; we don't want to allow post editing.
+		// This should only add new posts and new threads
+		
+		// Create a new Thread
+		if(count($path_components) == 2 && $path_components[1] != "") {
+			$thread_id = intval($_REQUEST['id']);
+			
+			$new_thread = Thread::create($thread_id);
+			
+			// Generate JSON encoding of new Thread
+			header("Content-type: application/json");
+			print($new_thread->getJSON());
+			exit();
+		}
 		
 		// Creating a new Post item
-		
 		$message = trim($_REQUEST['message']);
 		if($message == '') {
 			header("HTTP/1.0 400 Bad Request");
@@ -50,8 +61,28 @@
 			$timestamp = trim($_REQUEST['timestamp']);
 		}
 		
+		$thread_id = false;
+		if(isset($_REQUEST['thread_id'])) {
+			$thread_id = intval($_REQUEST['thread_id']);
+		}
+		else {
+			header("HTTP/1.0 400 Bad Request");
+			print("Invalid thread id");
+			exit();
+		}
+		
+		$is_original_post = false;
+		if(isset($_REQUEST['is_original_post'])) {
+			$is_original_post = intval($_REQUEST['is_original_post']);
+		}
+		else {
+			header("HTTP/1.0 400 Bad Request");
+			print("Do not know if original post");
+			exit();
+		}
+		
 		// Create new Post item via ORM
-		$new_post = Post::create($message, $timestamp);
+		$new_post = Post::create($message, $timestamp, $thread_id, $is_original_post);
 		
 		// Report if failed
 		if ($new_post == null) {

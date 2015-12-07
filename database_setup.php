@@ -1,19 +1,12 @@
 <?php
 
-  /*
-   * We're just hardcoding this info in at the moment so that we have something to work with.
-   */
-
 	$conn = new mysqli("classroom.cs.unc.edu", "eewing", "CH@ngemenow99Please!eewing", "eewingdb");
 	
 	$conn->query("drop table if exists Post");
+	$conn->query("drop table if exists Thread");
 
-	$conn->query("create table Post (id int auto_increment, message text, timestamp date, primary key (id))");
-							
-	$message1 = "this is a message";
-	$message2 = "this is another message";
-	
-	$conn->query("insert into Post values (0, '" . $message1 . "', " . "'1990-10-07')");
-	$conn->query("insert into Post values (0, '" . $message2 . "', " . "'1811-08-22')");
+	$conn->query("create table Thread (id int auto_increment, primary key (id))");
+	$conn->query("create table Post (id int auto_increment, message text, timestamp text, thread_id int,
+				is_original_post int, primary key (id), foreign key (thread_id) references Thread (id))");
 
 ?>
