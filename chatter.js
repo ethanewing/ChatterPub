@@ -19,7 +19,7 @@ $(document).ready(function () {
 			dataType: "json",
 			success: function(post_ids, status, jqXHR) {
 				for (var i = 0; i < post_ids.length; i++) {
-					loadPostItem(post_ids[i]);
+					loadPostItem(post_ids[i], 1);
 				}
 			},
 			error: function(jqXHR, status, error) {
@@ -27,14 +27,10 @@ $(document).ready(function () {
 			}
 	});
 	
-	$("#post_button").click(function(event) {
+	$("#post_bottom").on('click', '#reply_button', function(event) {
 		event.preventDefault();
-		/*
-		* This is going to be altered; we eventually want this to only be used to make posts
-		* once we're already in a thread.  It's as it is now just to avoid any possible
-		* compilation errors or glitches.
-		*/
-		alert("submit does nothing now; should be used to add replies to threads");
+		var thread_id = $(".original_post").data('post').thread_id;
+		createPost(thread_id, 0);
 	});
 	
 	$("#thread_button").click(function(event) {
@@ -46,8 +42,42 @@ $(document).ready(function () {
 	
 	$("#message_board").on('click', '.original_post', function(event) {
 		event.preventDefault();
-		if (!longpress) 
-			alert("this is a thread; everything worked!");
+		if (!longpress) {
+			var thread_data = $(this).data('post');
+			var thread_id = thread_data.thread_id;
+			$(".live").remove();
+			
+			$.ajax(url_base + "/chatter.php/thread/" + thread_id,
+					{
+						type: "GET",
+						dataType: "json",
+						success: function(post_ids, status, jqXHR) {
+							for(i = 0; i < post_ids.length; i++) {
+								loadPostItem(post_ids[i], 0);
+							}
+						},
+						error: function(jqXHR, status, error) {
+							alert(jqXHR.responseText);
+						}
+			});
+			
+			if(document.getElementById("homepage_link") == null) {	
+				var homepage_link = $("<div><a id='homepage_link' href=" + url_base + "/chatter.html>Back to homepage</a></div>");
+				homepage_link.css({
+					position: "absolute",
+					float: "left",
+					"margin-top": "-20px",
+					"margin-left": "1.35%"
+				})
+				$("#message_board").prepend(homepage_link);
+			}
+			
+			if(document.getElementById("reply_button") == null) {
+				$("#thread_button").remove();
+				var reply_button = $("<input type='button' class='btn btn-info' id='reply_button' value='Reply to thread'>");
+				$("#post_bottom").append(reply_button);
+			}
+		}
 	});
 	
 	$("#message_board").on('mousedown', '.original_post', function(event) {
@@ -94,7 +124,10 @@ var createPost = function(thread_id, is_original_post) {
 				data: post_data,
 				success: function(post_json, status, jqXHR) {
 					var p = new Post(post_json);
-					$("#message_board").prepend(p.makeDiv($("#message_board").offsetWidth));
+					if(is_original_post == 1)
+						$("#message_board").prepend(p.makeDiv($("#message_board").offsetWidth));
+					else
+						$("#message_board").append(p.makeDiv($("#message_board").offsetWidth));
 				},
 				error: function(jqXHR, status, error) {
 					alert(jqXHR.responseText);
@@ -103,13 +136,17 @@ var createPost = function(thread_id, is_original_post) {
 	);
 }
 
-var loadPostItem = function(id) {
+// isHomePage determines whether we prepend or append each new Post to the message board
+var loadPostItem = function(id, isHomePage) {
 	$.ajax(url_base + "/chatter.php/" + id,
 		{type: "GET",
 		dataType: "json",
 		success: function(post_json, status, jqXHR) {
 			var p = new Post(post_json);
-			$("#message_board").prepend(p.makeDiv($("#message_board").offsetWidth));
+			if(isHomePage == 1)
+				$("#message_board").prepend(p.makeDiv($("#message_board").offsetWidth));
+			else
+				$("#message_board").append(p.makeDiv($("#message_board").offsetWidth));
 		},
 		error: function(jqXHR, status, error) {
 				alert(jqXHR.responseText);
