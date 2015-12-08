@@ -1,10 +1,16 @@
 h1 {
 	text-align: center;
 	color: #FFFFFF;
+	font-family: "custom-font";
 }
 
 body {
 	background-image: url("http://i853.photobucket.com/albums/ab97/nygsbc78/Tar_Heel_Brick_Wallpaper.jpg");
+}
+
+@font-face {
+    font-family: "custom-font";
+    src: url(/custom-font.ttf);
 }
 
 .navbar-default {
@@ -61,7 +67,7 @@ body {
 	margin-left: 2px;
 }
 
-.submit_form #post_bottom #post_button {
+.submit_form #post_bottom #reply_button {
 	float: right;
 	position: relative;
 	bottom: -3px;
@@ -69,10 +75,10 @@ body {
 }
 
 .submit_form #post_bottom #thread_button {
-	float: left;
+	float: right;
 	position: relative;
 	bottom: -3px;
-	right: -5px;
+	right: 5px;
 }
 
 #message_board {
@@ -83,20 +89,23 @@ body {
 	color: #FFFFFF;
 }
 
+#homepage_link {
+	color: #ffffff;
+	font-size: 14px;
+}
+
 .live {
 	text-align: left;
 	word-wrap: break-word;
 	border: 2px solid rgb(100,100,100);
 	border-radius: 15px;
 	padding-left: 10px;
-}
-
-.original_post {
-	background-color: rgba(123,175,212,.3);
+	background-color: rgba(123,175,212,.5);
 	color: #FFFFFF;
 	font-size: 120%;
 }
 
 .original_post:hover {
 	background-color: rgba(100,100,100,.3);
+	cursor: pointer;
 }
