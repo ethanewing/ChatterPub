@@ -8,8 +8,28 @@
 		// GET means eiher instance look up, index generation, or deletion.
 		// However, for this app, we only care about instance look up.
 		
+		// This is for loading threads
+		if((count($path_components) >= 3) && ($path_components[1] == "thread") && ($path_components[2] != "")) {
+			// Interpret <thread_id> as integer
+			$thread_id = intval($path_components[2]);
+			
+			// Get all post IDs in thread
+			$thread_content = Thread::getAllPostIDs($thread_id);
+			
+			if($thread_content == null) {
+				// Thread not found
+				header("HTTP/1.0 404 Not Found");
+				print("Thread id: " . $thread_id . " not found.");
+				exit();
+			}
+			
+			// Normal lookup; generate JSON encoding as response
+			header("Content-type: application/json");
+			print(json_encode($thread_content));
+			exit();
+		}
 		// The following matches instance URL in form /chatter.php/[id]
-		if ((count($path_components) >= 2) && ($path_components[1] != "")) {
+		else if ((count($path_components) >= 2) && ($path_components[1] != "")) {
 			// Interpret <id> as integer
 			$post_id = intval($path_components[1]);
 			
@@ -29,6 +49,7 @@
 			exit();
 		}
 		
+		// Loading homepage
 		header("Content-type: application/json");
 		print(json_encode(Post::getAllOriginalPosts()));
 		exit();
