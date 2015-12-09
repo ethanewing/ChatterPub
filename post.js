@@ -26,7 +26,7 @@ Post.prototype.makeDiv = function(width) {
 	});
 	post_div.append(date_div);
 	
-	if(this.is_original_post)
+	if(this.is_original_post == 1)
 		post_div.addClass('original_post');
 	post_div.addClass('live');
 	post_div.data('post', this);
