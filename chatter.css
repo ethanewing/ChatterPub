@@ -8,6 +8,10 @@ body {
 	background-image: url("http://i853.photobucket.com/albums/ab97/nygsbc78/Tar_Heel_Brick_Wallpaper.jpg");
 }
 
+#main_heading {
+	font-weight: bold;
+}
+
 @font-face {
     font-family: "custom-font";
     src: url(/custom-font.ttf);

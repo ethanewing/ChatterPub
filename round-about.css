@@ -1,0 +1,20 @@
+.navbar-default {
+    background-color: #99BADD;
+    border-color: #99BADD;
+}
+
+.navbar > .container-fluid .navbar-brand {
+	color: #FFFFFF;
+}
+
+.navbar-default .navbar-nav > li > a {
+	color: #FFFFFF;
+}
+
+.img-center {
+	margin: 0 auto;
+}
+
+footer {
+    margin: 50px 0;
+}
