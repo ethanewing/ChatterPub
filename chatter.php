@@ -61,7 +61,7 @@
 		if(count($path_components) == 2 && $path_components[1] != "") {
 			$thread_id = intval($_REQUEST['id']);
 			
-			$new_thread = Thread::create($thread_id);
+			$new_thread = Thread::create();
 			
 			// Generate JSON encoding of new Thread
 			header("Content-type: application/json");
@@ -76,7 +76,7 @@
 			print("Invalid message");
 			exit();
 		}
-		
+
 		$timestamp = null;
 		if(isset($_REQUEST['timestamp'])) {
 			$timestamp = trim($_REQUEST['timestamp']);
@@ -102,8 +102,18 @@
 			exit();
 		}
 		
+		
+		$rating = false;
+		if(isset($_REQUEST['rating']))
+			$rating = intval($_REQUEST['rating']);
+		else {
+			header("HTTP/1.0 400 Bad Request");
+			print("Do not know if original post");
+			exit();
+		}
+		
 		// Create new Post item via ORM
-		$new_post = Post::create($message, $timestamp, $thread_id, $is_original_post);
+		$new_post = Post::create($message, $timestamp, $thread_id, $is_original_post, $rating);
 		
 		// Report if failed
 		if ($new_post == null) {
