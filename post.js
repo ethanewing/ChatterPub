@@ -18,12 +18,20 @@ Post.prototype.makeDiv = function(width) {
 	  "margin-left": "1.35%"
 	});
 	
-	var date_div = $("<div>" + this.timestamp + " " + this.rating + "</div>").css({
+	var rating_div = $("<div>Rating: " + this.rating + "</div>").css({
+		position: "absolute",
+		bottom: "0px",
+		"font-size": Post.FONT_SIZE_OF_DATE
+	});
+	
+	var date_div = $("<div>" + this.timestamp + "</div>").css({
 		position: "absolute",
 		bottom: "0px",
 		"font-size": Post.FONT_SIZE_OF_DATE,
 		right: "5px"
 	});
+	
+	post_div.append(rating_div);
 	post_div.append(date_div);
 	
 	if(this.is_original_post == 1)
