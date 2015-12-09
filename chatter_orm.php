@@ -12,17 +12,18 @@
 		private $timestamp;
 		private $thread_id;
 		private $is_original_post;  // binary 0 or 1 value
+		private $rating;
 		
-		public static function create($message, $timestamp, $thread_id, $is_original_post) {
+		public static function create($message, $timestamp, $thread_id, $is_original_post, $rating) {
 			$conn = new mysqli("classroom.cs.unc.edu", "eewing", "CH@ngemenow99Please!eewing", "eewingdb");
 			if ($conn->connect_errno)
 				echo "Failed to connect to MySQL: (" . $conn->connect_errno . ") " . $conn->connect_error;
 			else {
 				$result = $conn->query("insert into Post values (0, '" . $conn->real_escape_string($message) . "', '" . 
-						$timestamp . "', " . $thread_id . ", " . $is_original_post . ")");
+						$timestamp . "', " . $thread_id . ", " . $is_original_post . ", " . $rating . ")");
 				if($result) {
 					$newid = $conn->insert_id;
-					return new Post($newid, $message, $timestamp, $thread_id, $is_original_post);
+					return new Post($newid, $message, $timestamp, $thread_id, $is_original_post, $rating);
 				}
 				
 				return null;
@@ -43,7 +44,8 @@
 										$post_info['message'],
 										$post_info['timestamp'],
 										$post_info['thread_id'],
-										$post_info['is_original_post']);
+										$post_info['is_original_post'],
+										$post_info['rating']);
 				}
 				
 				return null;
@@ -121,12 +123,21 @@
 			return $posts;
 		}
 		
-		private function __construct($id, $message, $timestamp, $thread_id, $is_original_post) {
+		public static function upvote() {
+			$this->rating = ++$rating;
+		}
+		
+		public static function downvote() {
+			$this->rating = --$rating;
+		}
+		
+		private function __construct($id, $message, $timestamp, $thread_id, $is_original_post, $rating) {
 			$this->id = $id;
 			$this->message = $message;
 			$this->timestamp = $timestamp;
 			$this->thread_id = $thread_id;
 			$this->is_original_post = $is_original_post;
+			$this->rating = $rating;
 		}
 		
 		public function getID() {
@@ -149,12 +160,17 @@
 			return $this->is_original_post;
 		}
 		
+		public function getRating() {
+			return $this->rating;
+		}
+		
 		public function getJSON() {
 			$json_obj = array('id' => $this->id,
 					'message' => $this->message,
 					'timestamp' => $this->timestamp,
 					'thread_id' => $this->thread_id,
-					'is_original_post' => $this->is_original_post);
+					'is_original_post' => $this->is_original_post,
+					'rating' => $this->rating);
 			return json_encode($json_obj);
 		}
 
