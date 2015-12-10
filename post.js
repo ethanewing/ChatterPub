@@ -4,6 +4,7 @@ var Post = function(post_json) {
   this.timestamp = post_json.timestamp;
   this.thread_id = post_json.thread_id;
   this.is_original_post = post_json.is_original_post;
+  this.rating = post_json.rating;
 }
 
 Post.prototype.makeDiv = function(width) {
@@ -17,12 +18,20 @@ Post.prototype.makeDiv = function(width) {
 	  "margin-left": "1.35%"
 	});
 	
+	var rating_div = $("<div>Rating: " + this.rating + "</div>").css({
+		position: "absolute",
+		bottom: "0px",
+		"font-size": Post.FONT_SIZE_OF_DATE
+	});
+	
 	var date_div = $("<div>" + this.timestamp + "</div>").css({
 		position: "absolute",
 		bottom: "0px",
 		"font-size": Post.FONT_SIZE_OF_DATE,
 		right: "5px"
-	})
+	});
+	
+	post_div.append(rating_div);
 	post_div.append(date_div);
 	
 	if(this.is_original_post == 1)
@@ -35,9 +44,3 @@ Post.prototype.makeDiv = function(width) {
 
 Post.FONT_SIZE = 18;
 Post.FONT_SIZE_OF_DATE = 16;
-
-// not sure if we'll actually need this object yet.
-var Thread = function(thread_json) {
-	this.id = thread_json.id;
-	this.original_post = thread_json.original_post;
-}
