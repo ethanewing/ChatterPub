@@ -8,15 +8,27 @@ var Post = function(post_json) {
 }
 
 Post.prototype.makeDiv = function(width, p_id) {
-	var post_div = $("<div id=" + p_id + ">" + this.message + "</div>").css({
-	  position: "relative",
-	  height: "210px",
-	  width: "23.4375%",
-	  "font-size": Post.FONT_SIZE,
-	  "margin-top": "25px",
-	  float: "left",
-	  "margin-left": "1.35%"
-	});
+	if(this.is_original_post == 1){
+		var post_div = $("<div id=" + p_id + ">" + this.message + "<p></p><br><p></p></div>").css({
+		  position: "relative",
+		  "min-height": "210px",
+		  width: "23.4375%",
+		  "font-size": Post.FONT_SIZE,
+		  "margin-top": "35px",
+		  float: "left",
+		  "margin-left": "1.35%"
+		});
+	} else {
+		var post_div = $("<div id=" + p_id + ">" + this.message + "<p></p><br><p></p></div>").css({
+		  position: "relative",
+		  "min-height": "150px",
+		  width: "73.0125%",
+		  "font-size": Post.FONT_SIZE,
+		  "margin-top": "35px",
+		  float: "right",
+		  "margin-left": "1.35%",
+		});
+	}
 	
 	var rating_div = $("<div id='rating" + p_id + "'>Rating: " + this.rating + "</div>").css({
 		position: "absolute",
@@ -34,21 +46,22 @@ Post.prototype.makeDiv = function(width, p_id) {
 	var rating_adjustment_div = $("<div></div>").css({
 		position: "absolute",
 		float: "left",
-		"margin-top": "-25px",
-		"background-color": "rgba(123,175,212,.5)",
-		width: "94%",
+		"margin-top": "-28px",
+		"margin-left": "-10px",
+		"background-color": "rgba(123,175,212,.8)",
+		width: "100px",
 		height: "25px",
 		border: "thin solid rgb(100,100,100)",
 		"border-radius": "10px"
 	})
 	
-	var upvote_div = $("<div class='upvote'>Upvote</div>").css({
+	var upvote_div = $("<div class='upvote'><strong>+</strong></div>").css({
 		position: "absolute",
 		float: "left",
 		left: "15%",
 	});
 	
-	var downvote_div = $("<div class='downvote'>Downvote</div>").css({
+	var downvote_div = $("<div class='downvote'><strong>-</strong></div>").css({
 		positon: "absolute",
 		float: "right",
 		"margin-right": "15%",
