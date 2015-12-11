@@ -109,7 +109,16 @@ body {
 	font-size: 120%;
 }
 
+.original_post {
+	float: left;
+}
+
 .original_post:hover {
 	background-color: rgba(100,100,100,.3);
 	cursor: pointer;
+}
+
+.downvote:hover, .upvote:hover{
+	text-decoration: underline;
+	color: black;
 }
