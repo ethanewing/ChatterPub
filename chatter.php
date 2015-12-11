@@ -53,12 +53,45 @@
 		header("Content-type: application/json");
 		print(json_encode(Post::getAllOriginalPosts()));
 		exit();
+		
 	}
 	else if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		// This should only add new posts and new threads
 		
+		// The following matches instance URL in form /chatter.php/[upvote/downvote]/[id]
+		if ((count($path_components) >= 3) && ($path_components[1] != "") && ($path_components[2] != "")) {
+			// Interpret <id> as integer
+			$post_id = intval($path_components[2]);
+
+			// Look up object via ORM and update rating via ORM
+			$vote_type = false;
+			if(isset($_REQUEST['vote_type']))
+				$vote_type = trim($_REQUEST['vote_type']);
+			
+			if($vote_type == 'upvote') {
+				$tmp_post = Post::findByID($post_id);
+				$post = $tmp_post->upvote();
+			}
+			else if($vote_type == 'downvote') {
+				$tmp_post = Post::findByID($post_id);
+				$post = $tmp_post->downvote();
+			}
+
+			if ($post == null) {
+				// Post not found.
+				header("HTTP/1.0 404 Not Found");
+				print("Post id: " . $post_id . " not found.");
+				exit();
+			}
+			
+			// Normal lookup; generate JSON encoding as response
+			header("Content-type: application/json");
+			print($post->getJSON());
+			exit();
+		}
+		
 		// Create a new Thread
-		if(count($path_components) == 2 && $path_components[1] != "") {
+		else if(count($path_components) == 2 && $path_components[1] != "") {
 			$thread_id = intval($_REQUEST['id']);
 			
 			$new_thread = Thread::create();
@@ -101,7 +134,6 @@
 			print("Do not know if original post");
 			exit();
 		}
-		
 		
 		$rating = false;
 		if(isset($_REQUEST['rating']))
