@@ -1,11 +1,5 @@
 <?php
 
-	/*
-	 * Note: as of now, the user database and class are not configured to account for anything other than
-	 * an ID.  We'll want to log other information to account for user authentication, whether the user
-	 * is anonymous or not (should we choose to have user profiles).  So as of now this is unfinished.
-	 */
-
 	class Post {
 		private $id;
 		private $message;
@@ -39,13 +33,13 @@
 				if($result) {
 					if($result->num_rows == 0)
 						return null;
-						$post_info = $result->fetch_assoc();
-						return new Post($post_info['id'], 
-										$post_info['message'],
-										$post_info['timestamp'],
-										$post_info['thread_id'],
-										$post_info['is_original_post'],
-										$post_info['rating']);
+					$post_info = $result->fetch_assoc();
+					return new Post($post_info['id'], 
+									$post_info['message'],
+									$post_info['timestamp'],
+									$post_info['thread_id'],
+									$post_info['is_original_post'],
+									$post_info['rating']);
 				}
 				
 				return null;
@@ -123,12 +117,58 @@
 			return $posts;
 		}
 		
-		public static function upvote() {
-			$this->rating = ++$rating;
+		public function upvote() {
+			$conn = new mysqli("classroom.cs.unc.edu", "eewing", "CH@ngemenow99Please!eewing", "eewingdb");
+			if($conn->connect_errno)
+				echo "Failed to connect to MySQL: (" . $conn->connect_errno . ")" . $conn->connect_error;
+			else {
+				$this->rating = $this->rating + 1;
+				$conn->query("update Post set rating = " . $this->rating . " where id = " . $this->id);
+				$result = $conn->query("select * from Post where id = " . $this->id);
+				
+				if($result) {
+					if($result) {
+						if($result->num_rows == 0)
+							return null;
+						$post_info = $result->fetch_assoc();
+						return new Post($post_info['id'], 
+										$post_info['message'],
+										$post_info['timestamp'],
+										$post_info['thread_id'],
+										$post_info['is_original_post'],
+										$post_info['rating']);
+					}
+					
+					return null;
+				}
+			}
 		}
 		
-		public static function downvote() {
-			$this->rating = --$rating;
+		public function downvote() {
+			$conn = new mysqli("classroom.cs.unc.edu", "eewing", "CH@ngemenow99Please!eewing", "eewingdb");
+			if($conn->connect_errno)
+				echo "Failed to connect to MySQL: (" . $conn->connect_errno . ")" . $conn->connect_error;
+			else {
+				$this->rating = $this->rating - 1;
+				$conn->query("update Post set rating = " . $this->rating . " where id = " . $this->id);
+				$result = $conn->query("select * from Post where id = " . $this->id);
+				
+				if($result) {
+					if($result) {
+						if($result->num_rows == 0)
+							return null;
+						$post_info = $result->fetch_assoc();
+						return new Post($post_info['id'], 
+										$post_info['message'],
+										$post_info['timestamp'],
+										$post_info['thread_id'],
+										$post_info['is_original_post'],
+										$post_info['rating']);
+					}
+					
+					return null;
+				}
+			}
 		}
 		
 		private function __construct($id, $message, $timestamp, $thread_id, $is_original_post, $rating) {
@@ -282,58 +322,6 @@
 		}
 		
 		public function getID() {
-			return $this->$id;
-		}
-	}
-	
-	
-	class Forum {
-		private $id;
-		private $name;
-		
-		public static function create($name) {
-			$conn = new mysqli("classroom.cs.unc.edu", "eewing", "CH@ngemenow99Please!eewing", "eewingdb");
-			if ($conn->connect_errno)
-				echo "Failed to connect to MySQL: (" . $conn->connect_errno . ") " . $conn->connect_error;
-			else {
-				$result = $conn->query("insert into Thread values (0, '" . $name . "')");
-				if($result) {
-					$newid = $conn->insert_id;
-					return new Forum($newid, $name);
-				}
-				
-				return null;
-			}
-		}
-		
-		public static function findByID($id) {
-			$conn = new mysqli("classroom.cs.unc.edu", "eewing", "CH@ngemenow99Please!eewing", "eewingdb");
-			if($conn->connect_errno)
-				echo "Failed to connect to MySQL: (" . $conn->connect_errno . ")" . $conn->connect_error;
-			else {
-				$result = $conn->query("select * from Forum where id = " . $id);
-				if($result) {
-					if($result->num_rows == 0)
-						return null;
-					$forum_info = $result->fetch_assoc();
-					return new Forum($forum_info['id'], 
-									$forum_info['name']);
-				}
-				
-				return null;
-			}
-		}
-		
-		private function __construct($id, $name) {
-			$this->$id = $id;
-			$this->$name = $name;
-		}
-		
-		public function getID() {
-			return $this->$id;
-		}
-		
-		public function getName() {
 			return $this->$id;
 		}
 	}
