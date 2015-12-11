@@ -121,4 +121,5 @@ body {
 .downvote:hover, .upvote:hover{
 	text-decoration: underline;
 	color: black;
+	cursor: hand;
 }
