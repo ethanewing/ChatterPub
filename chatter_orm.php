@@ -80,42 +80,6 @@
 			}
 		}
 		
-		/* Used to get multiple Post objects */
-		public static function getRange($start, $end) {
-			if ($start < 0) {
-				if ($end > $start)
-					return null;
-				$direction = "DESC";
-				$start *= -1;
-				$end *= -1;
-			} 
-			else {
-				if ($end < $start)
-					return null;
-				$direction = "ASC";
-			}
-			
-			$conn = new mysqli("classroom.cs.unc.edu", "eewing", "CH@ngemenow99Please!eewing", "eewingdb");
-			if($conn->connect_errno)
-				echo "Failed to connect to MySQL: (" . $conn->connect_errno . ")" . $conn->connect_error;
-			else {
-				$result = $conn->query("select id from Post order by id " . $direction);
-				$posts = array();
-			
-				if ($result) {
-					for ($i = 1; $i < $start; $i++)
-						$result->fetch_row();
-					
-					for ($i = $start; $i <= $end; $i++) {
-						$next_row = $result->fetch_row();
-						if ($next_row)
-							$posts[] = Post::findByID($next_row[0]);
-					}
-				}
-			}
-			
-			return $posts;
-		}
 		
 		public function upvote() {
 			$conn = new mysqli("classroom.cs.unc.edu", "eewing", "CH@ngemenow99Please!eewing", "eewingdb");
@@ -123,23 +87,46 @@
 				echo "Failed to connect to MySQL: (" . $conn->connect_errno . ")" . $conn->connect_error;
 			else {
 				$this->rating = $this->rating + 1;
-				$conn->query("update Post set rating = " . $this->rating . " where id = " . $this->id);
-				$result = $conn->query("select * from Post where id = " . $this->id);
-				
-				if($result) {
-					if($result) {
-						if($result->num_rows == 0)
-							return null;
-						$post_info = $result->fetch_assoc();
-						return new Post($post_info['id'], 
-										$post_info['message'],
-										$post_info['timestamp'],
-										$post_info['thread_id'],
-										$post_info['is_original_post'],
-										$post_info['rating']);
-					}
+				$result = $conn->query("select * from PostUser where addr = '" . $_SERVER['REMOTE_ADDR'] . "' and pid = " . $this->id);
+				if($result->num_rows == 0){
+					$conn->query("insert into PostUser values (0, " . $this->id . ", '" . $_SERVER['REMOTE_ADDR'] . "')");
 					
-					return null;
+					$conn->query("update Post set rating = " . $this->rating . " where id = " . $this->id);
+					$result = $conn->query("select * from Post where id = " . $this->id);
+					
+					if($result) {
+						if($result) {
+							if($result->num_rows == 0)
+								return null;
+							$post_info = $result->fetch_assoc();
+							return new Post($post_info['id'], 
+											$post_info['message'],
+											$post_info['timestamp'],
+											$post_info['thread_id'],
+											$post_info['is_original_post'],
+											$post_info['rating']);
+						}
+						
+						return null;
+					}
+				} else {
+					$result = $conn->query("select * from Post where id = " . $this->id);
+					
+					if($result) {
+						if($result) {
+							if($result->num_rows == 0)
+								return null;
+							$post_info = $result->fetch_assoc();
+							return new Post($post_info['id'], 
+											$post_info['message'],
+											$post_info['timestamp'],
+											$post_info['thread_id'],
+											$post_info['is_original_post'],
+											$post_info['rating']);
+						}
+						
+						return null;
+					}
 				}
 			}
 		}
@@ -150,23 +137,46 @@
 				echo "Failed to connect to MySQL: (" . $conn->connect_errno . ")" . $conn->connect_error;
 			else {
 				$this->rating = $this->rating - 1;
-				$conn->query("update Post set rating = " . $this->rating . " where id = " . $this->id);
-				$result = $conn->query("select * from Post where id = " . $this->id);
-				
-				if($result) {
-					if($result) {
-						if($result->num_rows == 0)
-							return null;
-						$post_info = $result->fetch_assoc();
-						return new Post($post_info['id'], 
-										$post_info['message'],
-										$post_info['timestamp'],
-										$post_info['thread_id'],
-										$post_info['is_original_post'],
-										$post_info['rating']);
-					}
+				$result = $conn->query("select * from PostUser where addr = '" . $_SERVER['REMOTE_ADDR'] . "' and pid = " . $this->id);
+				if($result->num_rows == 0){
+					$conn->query("insert into PostUser values (0, " . $this->id . ", '" . $_SERVER['REMOTE_ADDR'] . "')");
 					
-					return null;
+					$conn->query("update Post set rating = " . $this->rating . " where id = " . $this->id);
+					$result = $conn->query("select * from Post where id = " . $this->id);
+					
+					if($result) {
+						if($result) {
+							if($result->num_rows == 0)
+								return null;
+							$post_info = $result->fetch_assoc();
+							return new Post($post_info['id'], 
+											$post_info['message'],
+											$post_info['timestamp'],
+											$post_info['thread_id'],
+											$post_info['is_original_post'],
+											$post_info['rating']);
+						}
+						
+						return null;
+					}
+				} else {
+					$result = $conn->query("select * from Post where id = " . $this->id);
+					
+					if($result) {
+						if($result) {
+							if($result->num_rows == 0)
+								return null;
+							$post_info = $result->fetch_assoc();
+							return new Post($post_info['id'], 
+											$post_info['message'],
+											$post_info['timestamp'],
+											$post_info['thread_id'],
+											$post_info['is_original_post'],
+											$post_info['rating']);
+						}
+						
+						return null;
+					}
 				}
 			}
 		}
