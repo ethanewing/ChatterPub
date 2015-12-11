@@ -85,6 +85,18 @@ $(document).ready(function () {
 		longpress = (endTime - startTime < 250) ? false: true;
 	});
 	
+	$("#message_board").on('click', '.upvote', function(event) {
+		event.preventDefault();
+		vote($(this).data('p_id'), 'upvote');
+		return false;
+	});
+	
+	$("#message_board").on('click', '.downvote', function(event) {
+		event.preventDefault();
+		vote($(this).data('p_id'), 'downvote');
+		return false;
+	})
+	
 });
 
 var createThread = function() {
@@ -122,9 +134,9 @@ var createPost = function(thread_id, is_original_post) {
 				success: function(post_json, status, jqXHR) {
 					var p = new Post(post_json);
 					if(is_original_post == 1)
-						$("#message_board").prepend(p.makeDiv($("#message_board").offsetWidth));
+						$("#message_board").prepend(p.makeDiv($("#message_board").offsetWidth, p.id));
 					else
-						$("#message_board").append(p.makeDiv($("#message_board").offsetWidth));
+						$("#message_board").append(p.makeDiv($("#message_board").offsetWidth, p.id));
 				},
 				error: function(jqXHR, status, error) {
 					alert(jqXHR.responseText);
@@ -141,12 +153,30 @@ var loadPostItem = function(id, isHomePage) {
 		success: function(post_json, status, jqXHR) {
 			var p = new Post(post_json);
 			if(isHomePage == 1)
-				$("#message_board").prepend(p.makeDiv($("#message_board").offsetWidth));
+				$("#message_board").prepend(p.makeDiv($("#message_board").offsetWidth, p.id));
 			else
-				$("#message_board").append(p.makeDiv($("#message_board").offsetWidth));
+				$("#message_board").append(p.makeDiv($("#message_board").offsetWidth, p.id));
 		},
 		error: function(jqXHR, status, error) {
 				alert(jqXHR.responseText);
+		}
+	});
+}
+
+var vote = function(id, vote_type) {
+	var vote_data = {};
+	vote_data.vote_type = vote_type;
+	
+	$.ajax(url_base + "/chatter.php/" + vote_type + "/" + id,
+		{type: "POST",
+		dataType: "json",
+		data: vote_data,
+		success: function(post_json, status, jqXHR) {
+		//	var post = document.getElementByID(id).data('post').rating = post_json.rating;
+			$("#rating" + id).text("Rating: " + post_json.rating);
+		},
+		error: function(jqXHR, status, error) {
+			alert(jqXHR.responseText);
 		}
 	});
 }
